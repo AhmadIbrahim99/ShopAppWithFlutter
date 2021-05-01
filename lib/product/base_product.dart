@@ -8,7 +8,7 @@ import 'package:flutter_shop/product_option/base_production.dart';
 import 'package:flutter_shop/tag/base_tag.dart';
 import 'package:flutter_shop/tag/tag_controller.dart';
 
-abstract class BaseProduct{
+class BaseProduct{
 
   String id;
   String title;

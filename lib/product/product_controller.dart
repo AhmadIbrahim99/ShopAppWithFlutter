@@ -7,4 +7,5 @@ class ProductController{
   static List<BaseProduct> toProducts(List<Map<String,dynamic>> jsonObject){
 
   }
+
 }

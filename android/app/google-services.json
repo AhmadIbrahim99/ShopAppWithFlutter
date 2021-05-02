@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "498305142187",
+    "project_id": "fluttershop-ef300",
+    "storage_bucket": "fluttershop-ef300.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:498305142187:android:71d5d255d4411dbe2256ee",
+        "android_client_info": {
+          "package_name": "com.example.flutter_shop"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "498305142187-293593phov97g57umbns48kfm2fiekb9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAp0dZHG8M_PkHgRV3tSdUrowAeBelbPGY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "498305142187-293593phov97g57umbns48kfm2fiekb9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "498305142187-pjdbesal508s4c9ec8uak1tp6qoc1ciu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.fluttershop"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

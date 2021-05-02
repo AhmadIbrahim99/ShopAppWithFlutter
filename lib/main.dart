@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_shop/authentication/authentication_controller.dart';
 import 'authentication/authenticatable.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -21,6 +24,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
+
   MyHomePage({Key key, this.title}) : super(key: key);
   final String title;
 
@@ -29,9 +33,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
   int _counter = 0;
 
-  Authenticatable authenticatable=FirebaseAuthenticationController();
 
   void _incrementCounter() {
     setState(() {
@@ -41,8 +45,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-    authenticatable.login("email", "password");
 
     return Scaffold(
       appBar: AppBar(

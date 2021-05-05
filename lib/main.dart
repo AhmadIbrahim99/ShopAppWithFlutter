@@ -1,74 +1,173 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_shop/authentication/authentication_controller.dart';
-import 'authentication/authenticatable.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_shop/admin/add_category.dart';
+import 'package:flutter_shop/admin/add_edit_product.dart';
+import 'package:flutter_shop/admin/categories.dart';
+import 'package:flutter_shop/admin/products.dart';
+import 'package:flutter_shop/authentication/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
-
-void main() {
-  runApp(MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(FlutterShop());
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class FlutterShop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      home: AuthTest(),
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: Colors.teal,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      routes: {
+        "/add_category"  : (context) => AddCategory(),
+        "/add_product"  : (context) => AddEditProduct(),
+        "/all_products"  : (context) => AllProducts(),
+        "/all_categories"  : (context) => AllCategories(),
+      },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-
+class AuthTest extends StatefulWidget {
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _AuthTestState createState() => _AuthTestState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _AuthTestState extends State<AuthTest> {
+  TextEditingController _emailController = TextEditingController();
+  TextEditingController _passWordController = TextEditingController();
+  FireBaseAuthentication fireBaseAuthentication = FireBaseAuthentication();
 
-  int _counter = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    fireBaseAuthentication.getCurrentUser();
+    super.initState();
+  }
 
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _emailController.dispose();
+    _passWordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text("Home"),
+        centerTitle: true,
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+      drawer: Drawer(
+        // Add a ListView to the drawer. This ensures the user can scroll
+        // through the options in the drawer if there isn't enough vertical
+        // space to fit everything.
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+            DrawerHeader(
+              child: Text('Shop Drawer',style: TextStyle(color: Colors.white,fontSize: 24,fontWeight: FontWeight.bold),),
+              decoration: BoxDecoration(
+                color: Colors.teal,
+              ),
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            ListTile(
+              title: Text('Add Category'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, "/add_category");
+              },
             ),
+            ListTile(
+              title: Text('Add Product'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context,"/add_product");
+              },
+            ),
+            ListTile(
+              title: Text('All Categories'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, "/all_categories");
+              },
+            ),
+            ListTile(
+              title: Text('All Products'),
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.pushNamed(context, "/all_products");
+              },
+            ),
+
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+
     );
+
   }
 }
+
+
+/*return Scaffold(
+      appBar: AppBar(
+        title: Text("AuthTest"),
+      ),
+      body: Container(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Register"),
+            SizedBox(
+              height: 16,
+            ),
+            TextFormField(
+              controller: _emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                hintText: "Email",
+              ),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            TextFormField(
+              controller: _passWordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                hintText: "PassWord",
+              ),
+            ),
+            SizedBox(
+              height: 16,
+            ),
+            RaisedButton(
+                onPressed: () async {
+                  String email = _emailController.text;
+                  String passWord = _passWordController.text;
+                  var user =
+                      await fireBaseAuthentication.register(email, passWord);
+                  print(user);
+                },
+                child: Text("Register")),
+            SizedBox(
+              height: 16,
+            ),
+            RaisedButton(
+                onPressed: () async {
+                  fireBaseAuthentication.signOut();
+                },
+                child: Text("SignOut")),
+          ],
+        ),
+      ),
+    );*/

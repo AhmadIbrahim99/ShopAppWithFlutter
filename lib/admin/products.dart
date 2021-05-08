@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AllProducts extends StatefulWidget {
@@ -31,23 +32,34 @@ class _AllProductsState extends State<AllProducts> {
         if(snapshot.hasData){
           return new ListView(
             children: snapshot.data.docs.map((DocumentSnapshot document) {
-              return Container(
-                child: Column(
-                  children: [
-                    new ListTile(
-                      title: new Text(document.data()['product_title']),
-                      subtitle: new Text(document.data()['product_price']),
-                      trailing: IconButton(
-                        icon: Icon(Icons.delete,color: Colors.red,),
-                        onPressed: (){
-                          product.doc(document.id).delete();
-                        },
-                      ),
-                    ),
-                    new Text(document.data()['product_description']),
-                  ],
-                ),
+              return Padding(
+                padding: const EdgeInsets.only(bottom:16.0),
+                child: Container(
+                  child: Column(
+                    children: [
+                      new ListTile(
+                        title: new Text(document.data()['product_title']),
+                        subtitle: new Text(document.data()['product_price']),
+                        trailing: IconButton(
+                          icon: Icon(Icons.delete,color: Colors.red,),
+                          onPressed: (){
+                            product.doc(document.id).delete();
+                          },
+                        ),
 
+                      ),
+                      new Text(document.data()['product_description']),
+                      Padding(
+                        padding: const EdgeInsets.only(top:16.0),
+                        child: new Text(document.data()['category_title']),
+                      ),
+                      SizedBox(height: 16,),
+                      Image.network(document.data()['product_image'].toString()),
+                      Divider()
+                    ],
+                  ),
+
+                ),
               );
             }).toList(),
           );

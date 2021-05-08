@@ -21,6 +21,13 @@ class FlutterShop extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.teal,
+        dividerTheme: DividerThemeData(
+          space: 25,
+          thickness: 10,
+          color: Colors.black12,
+          indent: 20,
+          endIndent: 20
+        ),
       ),
       routes: {
         "/add_category"  : (context) => AddCategory(),

@@ -1,6 +1,12 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+
+
 
 class AddEditProduct extends StatefulWidget {
   @override
@@ -10,6 +16,11 @@ class AddEditProduct extends StatefulWidget {
 class _AddEditProductState extends State<AddEditProduct> {
 
   final _formKey=GlobalKey<FormState>();
+  File _image;
+  final picker=ImagePicker();
+
+  String imageUrl;
+
   TextEditingController _productTitle=TextEditingController();
   TextEditingController _productDescription=TextEditingController();
   TextEditingController _productPrice=TextEditingController();
@@ -19,6 +30,17 @@ class _AddEditProductState extends State<AddEditProduct> {
 
   bool isLoading=false;
 
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
 
   @override
   void dispose() {
@@ -94,19 +116,29 @@ class _AddEditProductState extends State<AddEditProduct> {
               SizedBox(
                   width: double.infinity,
                   child: _selectCategory()),
+              SizedBox(height: 16,),
+              (_image==null)?Text("No Image Selected",textAlign: TextAlign.center,):Image.file(_image),
+              SizedBox(height: 16,),
+              ElevatedButton(onPressed: (){
+                getImage();
+              }, child: Text("Select Image")),
               SizedBox(height: 32,),
               ElevatedButton(onPressed: (){
                 if(_formKey.currentState.validate()){
                   setState(() {
                     isLoading=true;
                   });
+
+                  upload(_productTitle.text);
+
                   FirebaseFirestore.instance.collection("products").doc()
                       .set({
                     "product_title" : _productTitle.text,
                     "product_description" : _productDescription.text,
                     "product_price" : _productPrice.text,
                     "category_title" : selectedValueCategory,
-                  }).then((value){
+                    "product_image" : imageUrl,
+                  }).then((value) async {
                     setState(() {
                       isLoading=false;
                     });
@@ -114,6 +146,7 @@ class _AddEditProductState extends State<AddEditProduct> {
                     _productDescription.text="";
                     _productTitle.text="";
                     selectedValueCategory=null;
+                    _image=null;
                   });
                 }
               },
@@ -183,5 +216,20 @@ class _AddEditProductState extends State<AddEditProduct> {
 
     }
 
+
+  Future upload(String name)async{
+    var file=File(_image.path);
+    if(_image!=null){
+      var snapshot= await firebase_storage.FirebaseStorage.instance.ref().child("images/$name").putFile(file).whenComplete(() => null);
+
+      setState(() async {
+        var downloadUrl= await snapshot.ref.getDownloadURL();
+        imageUrl=downloadUrl;
+      });
+    }else{
+
+    }
+
+  }
 
 }
